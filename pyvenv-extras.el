@@ -215,6 +215,7 @@ values differ, [re]activate the buffer's `pyvenv-workon' env."
   (pyvenv-extras//pyvenv-conda-env-term-init
    #'(lambda (command-string) (term-send-string (current-buffer) command-string))))
 
+;;;###autoload
 (define-minor-mode pyvenv-buffer-tracking-mode
   "Activate `pyvenv' tracking only on buffer changes."
   :group 'pyvenv-extras
@@ -233,6 +234,7 @@ values differ, [re]activate the buffer's `pyvenv-workon' env."
       (advice-remove #'pyvenv-track-virtualenv
                      #'pyvenv-extras//pyvenv-track-buffer-virtualenv))))
 
+;;;###autoload
 (define-minor-mode pyvenv-projectile-tracking-mode
   "Activate `pyvenv' tracking only on `projectile' project changes."
   :group 'pyvenv-extras
@@ -249,6 +251,7 @@ values differ, [re]activate the buffer's `pyvenv-workon' env."
       (advice-remove #'pyvenv-track-virtualenv
                      #'pyvenv-extras//pyvenv-track-projectile-virtualenv))))
 
+;;;###autoload
 (define-minor-mode pyvenv-persp-tracking-mode
   "Activate `pyvenv' tracking on `persp-mode' perspective changes."
   :group 'pyvenv-extras
@@ -259,6 +262,7 @@ values differ, [re]activate the buffer's `pyvenv-workon' env."
       (add-hook 'persp-activated-functions #'pyvenv-extras//persp-after-switch-set-venv)
     (remove-hook 'persp-activated-functions #'pyvenv-extras//persp-after-switch-set-venv)))
 
+;;;###autoload
 (define-minor-mode pyvenv-extras-mode
   "Activate `pyvenv-extras' mode."
   :group 'pyvenv-extras
