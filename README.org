@@ -16,7 +16,8 @@ environment tracking to =pyvenv=, and more.
      directory
    - Start and restart Python inferior processes in a way that preserves the
      =pyvenv= venv settings and prevents the cursor from jumping
-
+   - Make interactive Python sessions project-specific by adding =projectile=
+     project names to =python-mode= process names
 
 ** =pyvenv-projectile-tracking-mode=
 

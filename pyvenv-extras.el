@@ -262,6 +262,11 @@ values differ, [re]activate the buffer's `pyvenv-workon' env."
   :global t
   (if pyvenv-extras-mode
       (progn
+        ;; Make interactive Python sessions project-specific by adding
+        ;; `projectile' project names to `python-mode' process names.
+        (advice-add #'python-shell-get-process-name :around
+                    #'pyvenv-extras//python-shell-get-process-name)
+
         (add-hook 'term-exec-hook #'pyvenv-extras//term-init-pyvenv)
         (add-hook 'vterm-mode-hook #'pyvenv-extras//vterm-init-pyvenv)
 
@@ -282,6 +287,8 @@ values differ, [re]activate the buffer's `pyvenv-workon' env."
 
         (add-hook 'python-mode-hook #'pyvenv-extras//python-adjust-adaptive-fill-regexp))
     (progn
+      (advice-remove #'python-shell-get-process-name #'pyvenv-extras//python-shell-get-process-name)
+
       (remove-hook 'term-exec-hook #'pyvenv-extras//term-init-pyvenv)
       (remove-hook 'vterm-mode-hook #'pyvenv-extras//vterm-init-pyvenv)
 
