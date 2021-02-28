@@ -12,7 +12,7 @@ environment tracking to =pyvenv=, and more.
    - Initialize terminals so that they automatically enable the local
      venv (implemented for =term= and =vterm=)
    - Add =CONDA_PREFIX= and =CONDA_DEFAULT_ENV= variables to the environment
-   - Activate =comint= buffers in the =projectile=-determined project root
+   - Activate =comint= buffers within the =projectile=-determined project root
      directory
    - Start and restart Python inferior processes in a way that preserves the
      =pyvenv= venv settings and prevents the cursor from jumping

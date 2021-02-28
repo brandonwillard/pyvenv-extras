@@ -173,10 +173,11 @@ values differ, [re]activate the buffer's `pyvenv-workon' env."
               (s-replace "%" "" adaptive-fill-regexp)))
 
 (defun pyvenv-extras//pyvenv-restart-python (&rest _)
-    "Restart Python inferior processes (with venv awareness and not cursor jumps)."
+    "Restart Python inferior processes with virtual environment awareness and
+ without cursor jumps."
     ;; TODO: `pyvenv-restart-python' checks `pyvenv-virtual-env-name' and
-    ;; `pyvenv-virtual-env' *within* each inferior Python buffer, so we need to [re]set
-    ;; those values there (e.g. using the caller's venv values).
+    ;; `pyvenv-virtual-env' *within* each inferior Python buffer, so we need to
+    ;; [re]set those values there (e.g. using the caller's venv values).
     (interactive)
     (save-window-excursion
       (dolist (buf (persp-buffer-list))
@@ -215,7 +216,8 @@ values differ, [re]activate the buffer's `pyvenv-workon' env."
    #'(lambda (command-string) (term-send-string (current-buffer) command-string))))
 
 (define-minor-mode pyvenv-buffer-tracking-mode
-  "Activate pyvenv tracking only on buffer changes."
+  "Activate `pyvenv' tracking only on buffer changes."
+  :group 'pyvenv-extras
   :require 'pyvenv
   :init-value nil
   :global t
@@ -232,7 +234,8 @@ values differ, [re]activate the buffer's `pyvenv-workon' env."
                      #'pyvenv-extras//pyvenv-track-buffer-virtualenv))))
 
 (define-minor-mode pyvenv-projectile-tracking-mode
-  "Activate pyvenv tracking only on projectile project changes."
+  "Activate `pyvenv' tracking only on `projectile' project changes."
+  :group 'pyvenv-extras
   :require 'pyvenv
   :init-value nil
   :global t
@@ -248,6 +251,7 @@ values differ, [re]activate the buffer's `pyvenv-workon' env."
 
 (define-minor-mode pyvenv-persp-tracking-mode
   "Activate `pyvenv' tracking on `persp-mode' perspective changes."
+  :group 'pyvenv-extras
   :require 'pyvenv
   :init-value nil
   :global t
@@ -257,6 +261,7 @@ values differ, [re]activate the buffer's `pyvenv-workon' env."
 
 (define-minor-mode pyvenv-extras-mode
   "Activate `pyvenv-extras' mode."
+  :group 'pyvenv-extras
   :require 'python
   :init-value nil
   :global t
