@@ -3,13 +3,13 @@
 
 [[Testing Workflow][file:https://github.com/brandonwillard/pyvenv-extras/workflows/Testing%20Workflow/badge.svg]]
 
-An Emacs package that adds =projectile=-based Python virtual environment
-tracking to =pyvenv=, and more.
+An Emacs package that adds =projectile= and/or =persp-mode=-based Python virtual
+environment tracking to =pyvenv=, and more.
 
 * Features
 
 ** =pyvenv-extras-mode=
-   - Initializes terminals so that they automatically enable the local
+   - Initialize terminals so that they automatically enable the local
      venv (implemented for =term= and =vterm=)
    - Add =CONDA_PREFIX= and =CONDA_DEFAULT_ENV= variables to the environment
    - Activate =comint= buffers in the =projectile=-determined project root
@@ -21,23 +21,32 @@ tracking to =pyvenv=, and more.
 
 ** =pyvenv-projectile-tracking-mode=
 
-   This mode augments =pyvenv-tracking-mode= by only changing the venv when the
-   =projectile= project changes (and has a different venv).
+   This mode augments =pyvenv-tracking-mode= by only changing the virtual
+   environment when the =projectile= project changes (and has a different
+   virtual environment).
 
    Currently, the approach used relies on the availability of =pyvenv-workon=
    values within in each projects' =.dir-locals.el=, so each project must have
    those set.
 
+** =pyvenv-persp-tracking-mode=
+
+   This mode sets the virtual environment when a =persp-mode= perspective is
+   activated.
+
    When =projectile= is set to use =persp-mode=-scoped projects via
-   [[https://github.com/brandonwillard/proj-persp-extras][=proj-persp-extras=]], this mode effectively enables =persp-mode=-based
-   virtualenv scopes.  In other words, your current =persp-mode= perspective
-   determines which virtualenv is activate.
+   [[https://github.com/brandonwillard/proj-persp-extras][=proj-persp-extras=]] and =pyvenv-projectile-tracking-mode= is enabled, this
+   mode effectively enables =persp-mode=-based virtual environment scopes.  In
+   other words, your current =persp-mode= perspective determines which virtual
+   environment is activate.
 
 * Usage
 
-  Just enable the minor mode:
+  Just enable the minor modes:
   #+BEGIN_SRC elisp :eval never :exports code :results none
   (pyvenv-extras-mode +1)
+  (pyvenv-projectile-tracking-mode +1)
+  (pyvenv-persp-tracking-mode +1)
   #+END_SRC
 
 * Installation
@@ -51,7 +60,6 @@ tracking to =pyvenv=, and more.
     :fetcher git
     :url "https://github.com/brandonwillard/pyvenv-extras.git"))
   #+END_SRC
-
 
 * Development
   To use as a Cask dependency:

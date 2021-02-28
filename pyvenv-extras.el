@@ -1,4 +1,4 @@
-;;; pyvenv-extras.el --- Add projectile-based Python virtual environment tracking to pyvenv, and more
+;;; pyvenv-extras.el --- Add projectile and persp-mode-based Python virtual environment tracking using pyvenv, and more
 ;;
 ;; Copyright (c) 2018-2021 Brandon T. Willard
 ;;
@@ -10,7 +10,7 @@
 ;;; License: GPLv3
 
 ;;; Commentary:
-;; Add `projectile'-based Python virtual environment tracking to `pyvenv', and more
+;; Add `projectile' and `persp-mode'-based Python virtual environment tracking using `pyvenv', and more
 
 ;;; Code:
 
@@ -152,9 +152,8 @@ values differ, [re]activate the buffer's `pyvenv-workon' env."
   ;; switches/restores the window config for the perspective.  If we don't
   ;; work within the new window's buffer, then we're not making the changes
   ;; we want.
-  (when (eq python-auto-set-local-pyvenv-virtualenv 'on-project-switch)
-    (with-current-buffer (window-buffer)
-      (pyvenv-extras//pyvenv-mode-set-local-virtualenv "persp-switch"))))
+  (with-current-buffer (window-buffer)
+    (pyvenv-extras//pyvenv-mode-set-local-virtualenv "persp-switch")))
 
 (defun pyvenv-extras//filter-venvwrapper-supported-anaconda-hooks (pyvenv-res &rest r)
   "If we're using Anaconda envs, do not run virtualenvwrapper hooks."
@@ -246,6 +245,15 @@ values differ, [re]activate the buffer's `pyvenv-workon' env."
       (pyvenv-tracking-mode -1)
       (advice-remove #'pyvenv-track-virtualenv
                      #'pyvenv-extras//pyvenv-track-projectile-virtualenv))))
+
+(define-minor-mode pyvenv-persp-tracking-mode
+  "Activate `pyvenv' tracking on `persp-mode' perspective changes."
+  :require 'pyvenv
+  :init-value nil
+  :global t
+  (if pyvenv-projectile-tracking-mode
+      (add-hook 'persp-activated-functions #'pyvenv-extras//persp-after-switch-set-venv)
+    (remove-hook 'persp-activated-functions #'pyvenv-extras//persp-after-switch-set-venv)))
 
 (define-minor-mode pyvenv-extras-mode
   "Activate `pyvenv-extras' mode."

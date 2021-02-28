@@ -1,4 +1,4 @@
-;;; pyvenv-extras-test.el --- Tests for projectile-based Python virtual environment tracking, and more
+;;; pyvenv-extras-test.el --- Tests for projectile and persp-mode-based Python virtual environment tracking, and more
 ;;
 ;; Copyright (c) 2018-2021 Brandon T. Willard
 ;;
@@ -17,6 +17,7 @@
 (require 'ert)
 (require 'pyvenv)
 (require 'projectile)
+(require 'persp-mode)
 (require 'pyvenv-extras)
 
 (when (> emacs-major-version 26)
@@ -79,6 +80,7 @@ Taken from `projectile's `projectile-test.el'.
 
       (pyvenv-mode +1)
       (pyvenv-extras-mode +1)
+      (pyvenv-persp-tracking-mode +1)
 
       (projectile-add-known-project project-1-dir)
       (projectile-add-known-project project-2-dir)
