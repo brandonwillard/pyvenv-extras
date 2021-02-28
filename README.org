@@ -1,0 +1,62 @@
+#+TITLE: =pyvenv-extras=
+#+AUTHOR: Brandon T. Willard
+
+[[Testing Workflow][file:https://github.com/brandonwillard/pyvenv-extras/workflows/Testing%20Workflow/badge.svg]]
+
+An Emacs package that adds =projectile=-based Python virtual environment
+tracking to =pyvenv=, and more.
+
+* Features
+
+** =pyvenv-extras-mode=
+   - Initializes terminals so that they automatically enable the local
+     venv (implemented for =term= and =vterm=)
+   - Add =CONDA_PREFIX= and =CONDA_DEFAULT_ENV= variables to the environment
+   - Activate =comint= buffers in the =projectile=-determined project root
+     directory
+   - Start and restart Python inferior processes in a way that preserves the
+     =pyvenv= venv settings and prevents the cursor from jumping
+
+   Also, =pyvenv-projectile-tracking-mode= is enabled.
+
+** =pyvenv-projectile-tracking-mode=
+
+   This mode augments =pyvenv-tracking-mode= by only changing the venv when the
+   =projectile= project changes (and has a different venv).
+
+   Currently, the approach used relies on the availability of =pyvenv-workon=
+   values within in each projects' =.dir-locals.el=, so each project must have
+   those set.
+
+   When =projectile= is set to use =persp-mode=-scoped projects via
+   [[https://github.com/brandonwillard/proj-persp-extras][=proj-persp-extras=]], this mode effectively enables =persp-mode=-based
+   virtualenv scopes.  In other words, your current =persp-mode= perspective
+   determines which virtualenv is activate.
+
+* Usage
+
+  Just enable the minor mode:
+  #+BEGIN_SRC elisp :eval never :exports code :results none
+  (pyvenv-extras-mode +1)
+  #+END_SRC
+
+* Installation
+
+  Use your favorite approach to installing Emacs packages from GitHub.
+
+  Here's an example of one:
+  #+BEGIN_SRC elisp :eval never :exports code :results none
+  (quelpa
+  '(proj-persp-extras
+    :fetcher git
+    :url "https://github.com/brandonwillard/pyvenv-extras.git"))
+  #+END_SRC
+
+
+* Development
+  To use as a Cask dependency:
+  #+BEGIN_SRC elisp :eval never :exports code :results none
+  (depends-on "pyvenv-extras"
+              :git "https://github.com/brandonwillard/pyvenv-extras.git"
+              :branch "master")
+  #+END_SRC
