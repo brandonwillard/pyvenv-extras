@@ -17,7 +17,6 @@ environment tracking to =pyvenv=, and more.
    - Start and restart Python inferior processes in a way that preserves the
      =pyvenv= venv settings and prevents the cursor from jumping
 
-   Also, =pyvenv-projectile-tracking-mode= is enabled.
 
 ** =pyvenv-projectile-tracking-mode=
 

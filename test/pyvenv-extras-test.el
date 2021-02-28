@@ -80,6 +80,7 @@ Taken from `projectile's `projectile-test.el'.
 
       (pyvenv-mode +1)
       (pyvenv-extras-mode +1)
+      (pyvenv-projectile-tracking-mode +1)
       (pyvenv-persp-tracking-mode +1)
 
       (projectile-add-known-project project-1-dir)

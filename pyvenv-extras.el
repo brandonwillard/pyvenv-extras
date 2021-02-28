@@ -280,8 +280,7 @@ values differ, [re]activate the buffer's `pyvenv-workon' env."
         (advice-add #'pyvenv-virtualenvwrapper-supported
                     :filter-return #'pyvenv-extras//filter-venvwrapper-supported-anaconda-hooks)
 
-        (add-hook 'python-mode-hook #'pyvenv-extras//python-adjust-adaptive-fill-regexp)
-        (pyvenv-projectile-tracking-mode +1))
+        (add-hook 'python-mode-hook #'pyvenv-extras//python-adjust-adaptive-fill-regexp))
     (progn
       (remove-hook 'term-exec-hook #'pyvenv-extras//term-init-pyvenv)
       (remove-hook 'vterm-mode-hook #'pyvenv-extras//vterm-init-pyvenv)
@@ -297,8 +296,7 @@ values differ, [re]activate the buffer's `pyvenv-workon' env."
       (advice-remove #'pyvenv-extras/projectile-shell-pop #'pyvenv-extras//run-in-pyvenv-wrapper)
 
       (advice-remove #'pyvenv-virtualenvwrapper-supported
-                  #'pyvenv-extras//filter-venvwrapper-supported-anaconda-hooks)
-      (remove-hook 'python-mode-hook #'pyvenv-extras//python-adjust-adaptive-fill-regexp)
-      (pyvenv-projectile-tracking-mode -1))))
+                     #'pyvenv-extras//filter-venvwrapper-supported-anaconda-hooks)
+      (remove-hook 'python-mode-hook #'pyvenv-extras//python-adjust-adaptive-fill-regexp))))
 
 (provide 'pyvenv-extras)
