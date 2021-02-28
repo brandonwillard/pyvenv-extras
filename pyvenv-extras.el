@@ -282,10 +282,7 @@ values differ, [re]activate the buffer's `pyvenv-workon' env."
 
         (advice-add #'pyvenv-restart-python :override #'pyvenv-extras//pyvenv-restart-python)
 
-        ;; Enable automatic projectile-based venv activation before the
-        ;; following actions...
-        (advice-add #'pyvenv-extras/python-start-or-switch-repl :around #'pyvenv-extras//run-in-pyvenv-wrapper)
-        (advice-add #'pyvenv-extras/projectile-shell-pop :around #'pyvenv-extras//run-in-pyvenv-wrapper)
+        (advice-add #'run-python :around #'pyvenv-extras//run-in-pyvenv-wrapper)
 
         (advice-add #'pyvenv-virtualenvwrapper-supported
                     :filter-return #'pyvenv-extras//filter-venvwrapper-supported-anaconda-hooks)
@@ -304,8 +301,7 @@ values differ, [re]activate the buffer's `pyvenv-workon' env."
 
       (advice-remove #'pyvenv-restart-python #'pyvenv-extras//pyvenv-restart-python)
 
-      (advice-remove #'pyvenv-extras/python-start-or-switch-repl #'pyvenv-extras//run-in-pyvenv-wrapper)
-      (advice-remove #'pyvenv-extras/projectile-shell-pop #'pyvenv-extras//run-in-pyvenv-wrapper)
+      (advice-remove #'run-python #'pyvenv-extras//run-in-pyvenv-wrapper)
 
       (advice-remove #'pyvenv-virtualenvwrapper-supported
                      #'pyvenv-extras//filter-venvwrapper-supported-anaconda-hooks)
