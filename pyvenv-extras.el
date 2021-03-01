@@ -26,6 +26,10 @@
   nil
   "Name of the previously active virtual env; nil otherwise")
 
+(defvar pyvenv-extras--pyvenv-virtual-env-prev
+  nil
+  "Path of the previously active virtual env; nil otherwise")
+
 (defvar pyvenv-extras--pyvenv-last-scope
   nil
   "The last scope (e.g. buffer, project) considered by `pyvenv-track-virtualenv'.")
@@ -36,6 +40,22 @@
 (defvar-local pyvenv-virtual-env nil)
 
 (defvar-local pyvenv-virtual-env-name nil)
+
+(with-eval-after-load 'pyvenv
+  ;; Because we made the core `pyvenv' variables buffer-local, we
+  ;; need update `pyvenv-deactivate'; otherwise, it won't be able to
+  ;; deactivate environments in some situations.
+
+  (defun pyvenv-extras//pyvenv-deactivate (orig-func)
+    (if (and pyvenv-extras--pyvenv-virtual-env-prev (not pyvenv-virtual-env))
+        ;; Make sure that the previous venv is deactivated.
+        ;; We need to use `pyvenv-extras--pyvenv-virtual-env-prev',
+        ;; because `pyvenv-virtual-env' could be buffer-local.
+        (let ((pyvenv-virtual-env pyvenv-extras--pyvenv-virtual-env-prev))
+          (funcall orig-func))
+      (funcall orig-func)))
+
+  (advice-add #'pyvenv-deactivate :around #'pyvenv-extras//pyvenv-deactivate))
 
 (defun pyvenv-extras//get-project-local-venv ()
       "Returns projectile-specific `pyvenv-workon' and
@@ -88,7 +108,7 @@ effectively enables `persp-mode' virtualenv scopes."
       ;; buffer-local value, since buffers from other projects may be visiting
       ;; in the current project.
       ;; XXX: This consideration is limited to only projects that set
-      ;; `pyvenv-workon' via dirlocal values.
+      ;; `pyvenv-workon' via dir-local values.
       (pyvenv-extras//run-in-pyvenv
        (progn
          (setq pyvenv-extras--pyvenv-last-scope proj-name)
@@ -97,6 +117,7 @@ effectively enables `persp-mode' virtualenv scopes."
 (defun pyvenv-extras//pyvenv-conda-activate-additions ()
   (pyvenv-extras//run-in-pyvenv
     (setq pyvenv-extras--pyvenv-virtual-env-name-prev pyvenv-virtual-env-name)
+    (setq pyvenv-extras--pyvenv-virtual-env-prev pyvenv-virtual-env)
     (when (and (bound-and-true-p pyvenv-virtual-env)
               (bound-and-true-p pyvenv-virtual-env-name))
       (setenv "CONDA_PREFIX"
@@ -152,7 +173,9 @@ values differ, [re]activate the buffer's `pyvenv-workon' env."
   ;; switches/restores the window config for the perspective.  If we don't
   ;; work within the new window's buffer, then we're not making the changes
   ;; we want.
-  (with-current-buffer (window-buffer)
+  (with-current-buffer (if (eq frame-or-window 'frame)
+                           (current-buffer)
+                         (window-buffer))
     (pyvenv-extras//pyvenv-mode-set-local-virtualenv "persp-switch")))
 
 (defun pyvenv-extras//filter-venvwrapper-supported-anaconda-hooks (pyvenv-res &rest r)
@@ -258,7 +281,7 @@ values differ, [re]activate the buffer's `pyvenv-workon' env."
   :require 'pyvenv
   :init-value nil
   :global t
-  (if pyvenv-projectile-tracking-mode
+  (if pyvenv-persp-tracking-mode
       (add-hook 'persp-activated-functions #'pyvenv-extras//persp-after-switch-set-venv)
     (remove-hook 'persp-activated-functions #'pyvenv-extras//persp-after-switch-set-venv)))
 
