@@ -82,7 +82,7 @@ Taken from `projectile's `projectile-test.el'.
      "project-1/"
      "project-1/.projectile"
      "project-1/.dir-locals.el"
-     "project-1/file-2.py"
+     "project-1/file-1.py"
      "project-2/"
      "project-2/.projectile"
      "project-2/.dir-locals.el"
@@ -107,6 +107,7 @@ Taken from `projectile's `projectile-test.el'.
         (insert "((nil . ((pyvenv-workon . \"project-2-env\"))))"))
 
       (persp-mode +1)
+      (projectile-mode +1)
       (pyvenv-mode +1)
       (pyvenv-extras-mode +1)
       (pyvenv-projectile-tracking-mode +1)

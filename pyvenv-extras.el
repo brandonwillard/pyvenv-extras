@@ -88,6 +88,7 @@
 `dir-locals-class-alist'.
 
 This macro searches in dir-locals for a `pyvenv-workon' value."
+  (declare (indent 1) (debug (&rest form)))
   `(let* ((env-info (pyvenv-extras//get-project-local-venv))
           (pyvenv-workon-res (car env-info))
           (python-shell-virtualenv-root (cdr env-info)))
@@ -173,9 +174,7 @@ values differ, [re]activate the buffer's `pyvenv-workon' env."
   ;; switches/restores the window config for the perspective.  If we don't
   ;; work within the new window's buffer, then we're not making the changes
   ;; we want.
-  (with-current-buffer (if (eq frame-or-window 'frame)
-                           (current-buffer)
-                         (window-buffer))
+  (with-current-buffer (window-buffer)
     (pyvenv-extras//pyvenv-mode-set-local-virtualenv "persp-switch")))
 
 (defun pyvenv-extras//filter-venvwrapper-supported-anaconda-hooks (pyvenv-res &rest r)
