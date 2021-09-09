@@ -240,6 +240,17 @@ values differ, [re]activate the buffer's `pyvenv-workon' env."
 (defun pyvenv-extras//flycheck-python-find-project-root (checker)
   (projectile-project-root))
 
+(defun pyvenv-extras//flycheck-virtualenv-executable-find (executable &rest find-any)
+  "Find an EXECUTABLE in the current virtualenv (exclusively) if any."
+  ;; TODO: Use `pyvenv-extras//run-in-pyvenv'?
+  (if (bound-and-true-p python-mode)
+      (if (bound-and-true-p python-shell-virtualenv-root)
+          (let ((exec-path (nth 0 (python-shell-calculate-exec-path))))
+            (executable-find executable))
+        (when find-any
+          (executable-find executable)))
+    (executable-find executable)))
+
 ;;;###autoload
 (define-minor-mode pyvenv-buffer-tracking-mode
   "Activate `pyvenv' tracking only on buffer changes."
@@ -318,6 +329,10 @@ values differ, [re]activate the buffer's `pyvenv-workon' env."
 
         (add-hook 'python-mode-hook #'pyvenv-extras//python-adjust-adaptive-fill-regexp)
 
+        (when (featurep 'flycheck)
+          (setq flycheck-executable-find
+                #'pyvenv-extras//flycheck-virtualenv-executable-find))
+
         (when (fboundp 'flycheck-python-find-project-root)
           ;; Make sure `flycheck' uses the `projectile' project
           (advice-add #'flycheck-python-find-project-root :override #'pyvenv-extras//flycheck-python-find-project-root)))
@@ -339,6 +354,9 @@ values differ, [re]activate the buffer's `pyvenv-workon' env."
       (advice-remove #'pyvenv-virtualenvwrapper-supported
                      #'pyvenv-extras//filter-venvwrapper-supported-anaconda-hooks)
       (remove-hook 'python-mode-hook #'pyvenv-extras//python-adjust-adaptive-fill-regexp)
+
+      (when (featurep 'flycheck)
+        (setq flycheck-executable-find #'flycheck-default-executable-find))
 
       (when (fboundp 'flycheck-python-find-project-root)
         (advice-remove #'flycheck-python-find-project-root #'pyvenv-extras//flycheck-python-find-project-root)))))
