@@ -237,6 +237,9 @@ values differ, [re]activate the buffer's `pyvenv-workon' env."
   (pyvenv-extras//pyvenv-conda-env-term-init
    #'(lambda (command-string) (term-send-string (current-buffer) command-string))))
 
+(defun pyvenv-extras//flycheck-python-find-project-root (checker)
+  (projectile-project-root))
+
 ;;;###autoload
 (define-minor-mode pyvenv-buffer-tracking-mode
   "Activate `pyvenv' tracking only on buffer changes."
@@ -313,7 +316,11 @@ values differ, [re]activate the buffer's `pyvenv-workon' env."
         (advice-add #'pyvenv-virtualenvwrapper-supported
                     :filter-return #'pyvenv-extras//filter-venvwrapper-supported-anaconda-hooks)
 
-        (add-hook 'python-mode-hook #'pyvenv-extras//python-adjust-adaptive-fill-regexp))
+        (add-hook 'python-mode-hook #'pyvenv-extras//python-adjust-adaptive-fill-regexp)
+
+        (when (fboundp 'flycheck-python-find-project-root)
+          ;; Make sure `flycheck' uses the `projectile' project
+          (advice-add #'flycheck-python-find-project-root :override #'pyvenv-extras//flycheck-python-find-project-root)))
     (progn
       (advice-remove #'python-shell-get-process-name #'pyvenv-extras//python-shell-get-process-name)
 
@@ -331,6 +338,9 @@ values differ, [re]activate the buffer's `pyvenv-workon' env."
 
       (advice-remove #'pyvenv-virtualenvwrapper-supported
                      #'pyvenv-extras//filter-venvwrapper-supported-anaconda-hooks)
-      (remove-hook 'python-mode-hook #'pyvenv-extras//python-adjust-adaptive-fill-regexp))))
+      (remove-hook 'python-mode-hook #'pyvenv-extras//python-adjust-adaptive-fill-regexp)
+
+      (when (fboundp 'flycheck-python-find-project-root)
+        (advice-remove #'flycheck-python-find-project-root #'pyvenv-extras//flycheck-python-find-project-root)))))
 
 (provide 'pyvenv-extras)

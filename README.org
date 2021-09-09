@@ -18,6 +18,7 @@ environment tracking to =pyvenv=, and more.
      =pyvenv= venv settings and prevents the cursor from jumping
    - Make interactive Python sessions project-specific by adding =projectile=
      project names to =python-mode= process names
+   - Make =flycheck= use the =projectile= project directory
 
 ** =pyvenv-projectile-tracking-mode=
 
